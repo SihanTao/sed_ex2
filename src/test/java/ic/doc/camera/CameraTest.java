@@ -42,4 +42,16 @@ public class CameraTest {
 
     camera.powerOff();
   }
+
+  @Test
+  public void pressingTheShutterWhenPowerOffDoesNothing() {
+
+      Camera camera = new Camera(sensor);
+
+      context.checking(new Expectations() {{
+
+      }});
+
+      camera.pressShutter();
+  }
 }
