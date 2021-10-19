@@ -18,7 +18,6 @@ public class Camera {
   }
 
   public void powerOff() {
-    // not implemented
+    sensor.powerDown();
   }
 }
-
