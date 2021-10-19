@@ -2,11 +2,12 @@ package ic.doc.camera;
 
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CameraTest {
 
@@ -29,6 +30,7 @@ public class CameraTest {
         });
 
     camera.powerOn();
+    assertTrue(camera.isOn());
   }
 
   @Test
@@ -44,6 +46,7 @@ public class CameraTest {
 
     camera.powerOn();
     camera.powerOff();
+    assertFalse(camera.isOn());
   }
 
   @Test
@@ -51,7 +54,9 @@ public class CameraTest {
     context.checking(
         new Expectations() {
           {
-            // do nothing
+            assertFalse(camera.isOn());
+            never(sensor);
+            never(memoryCard);
           }
         });
 
@@ -104,7 +109,6 @@ public class CameraTest {
             exactly(1).of(sensor).readData();
             will(returnValue(data));
             exactly(1).of(memoryCard).write(data);
-
             exactly(1).of(sensor).powerDown();
           }
         });
@@ -126,11 +130,6 @@ public class CameraTest {
             exactly(1).of(sensor).readData();
             will(returnValue(data));
             exactly(1).of(memoryCard).write(data);
-            // isWriting, power off do nothing
-            // until write complete
-            // exactly(1).of(camera).writeComplete();
-            // never(sensor).powerDown();
-            // exactly(1).of(camera).writeComplete();
             exactly(1).of(sensor).powerDown();
           }
         });
