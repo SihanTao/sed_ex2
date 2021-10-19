@@ -93,4 +93,26 @@ public class CameraTest {
         camera.powerOff();
 
     }
+
+    @Test
+    public void writingDataCompletedSwitchingOffCameraPowersDownSensor() {
+        Camera camera = new Camera(sensor, memoryCard);
+        byte[] data = "Data from Camera Sensor".getBytes(StandardCharsets.UTF_8);
+
+
+        context.checking(new Expectations() {{
+            exactly(1).of(sensor).powerUp();
+            exactly(1).of(sensor).readData();
+            will(returnValue(data));
+            exactly(1).of(memoryCard).write(data);
+            //exactly(1).of(camera).writeComplete();
+            exactly(1).of(sensor).powerDown();
+        }});
+
+        camera.powerOn();
+        camera.pressShutter();
+        camera.writeComplete();
+        camera.powerOff();
+    }
+
 }
