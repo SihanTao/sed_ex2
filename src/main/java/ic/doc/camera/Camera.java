@@ -3,13 +3,14 @@ package ic.doc.camera;
 public class Camera implements WriteListener {
 
   private Boolean isOn;
-  private Sensor sensor;
-  private MemoryCard memoryCard;
+  private final Sensor sensor;
+  private final MemoryCard memoryCard;
   private Boolean isWriting;
   private Boolean willOff;
+  private static final Boolean DEFAULT_POWER_STATE = false;
 
   public Camera(Sensor sensor, MemoryCard memoryCard) {
-    this.isOn = false;
+    this.isOn = DEFAULT_POWER_STATE;
     this.sensor = sensor;
     this.memoryCard = memoryCard;
     this.isWriting = false;
