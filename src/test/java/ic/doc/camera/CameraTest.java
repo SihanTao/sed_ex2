@@ -73,4 +73,24 @@ public class CameraTest {
         camera.powerOn();
         camera.pressShutter();
     }
+
+    @Test
+    public void switchingCameraOffDoesNotPowerDownSensorWhenWritingData() {
+        Camera camera = new Camera(sensor, memoryCard);
+        byte[] data = "Data from Camera Sensor".getBytes(StandardCharsets.UTF_8);
+
+
+        context.checking(new Expectations() {{
+            exactly(1).of(sensor).powerUp();
+            exactly(1).of(sensor).readData();
+            will(returnValue(data));
+            exactly(1).of(memoryCard).write(data);
+            never(sensor).powerDown();
+        }});
+
+        camera.powerOn();
+        camera.pressShutter();
+        camera.powerOff();
+
+    }
 }
