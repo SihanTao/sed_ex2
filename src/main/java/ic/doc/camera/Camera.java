@@ -6,12 +6,14 @@ public class Camera implements WriteListener {
   private Sensor sensor;
   private MemoryCard memoryCard;
   private Boolean isWriting;
+  private Boolean willOff;
 
   public Camera(Sensor sensor, MemoryCard memoryCard) {
     this.isOn = false;
     this.sensor = sensor;
     this.memoryCard = memoryCard;
     this.isWriting = false;
+    this.willOff = false;
   }
 
   public void pressShutter() {
@@ -28,13 +30,19 @@ public class Camera implements WriteListener {
 
   public void powerOff() {
     isOn = false;
-    if (isWriting)
+    if (isWriting) {
+      willOff = true;
       return;
+    }
     sensor.powerDown();
   }
 
   @Override
   public void writeComplete() {
+
     isWriting = false;
+    if (willOff) {
+      sensor.powerDown();
+    }
   }
 }
